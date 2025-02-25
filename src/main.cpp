@@ -20,14 +20,14 @@ int previousEjectState = HIGH;
 
 // Array to store state descriptions.  Make this const so it's in flash memory.
 const char* stateDescriptions[] = {
-  "000 - Closed - Detecting",
-  "001 - Tray Open",
-  "010 - Unloading",
-  "011 - Opening",
-  "100 - Empty - No Media",
-  "101 - Closing",
-  "110 - Media Detected",
-  "111 - ???"
+  "Closed - Detecting", //000
+  "Tray Open",          //001
+  "Unloading",          //010
+  "Opening",            //011
+  "Empty - No Media",   //100
+  "Closing",            //101  
+  "Media Detected",     //110
+  "111 - ???"           //111
 };
 
 // put function declarations here:
