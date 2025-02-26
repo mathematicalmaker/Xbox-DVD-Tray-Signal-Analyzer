@@ -20,22 +20,19 @@ int previousEjectState = HIGH;
 
 // Array to store state descriptions.  Make this const so it's in flash memory.
 const char* stateDescriptions[] = {
-  "Closed - Detecting", //000
-  "Tray Open",          //001
-  "Unloading",          //010
-  "Opening",            //011
-  "Empty - No Media",   //100
-  "Closing",            //101  
-  "Media Detected",     //110
-  "111 - ???"           //111
+  "Detecting",       //000
+  "Tray Open",       //001
+  "Unloading",       //010
+  "Opening",         //011
+  "No Media",        //100
+  "Closing",         //101  
+  "Media Detected",  //110
+  "Initializing"     //111
 };
-
-// put function declarations here:
-// int myFunction(int, int);
 
 void setup() {
   // Initialize Software Serial communication
-  mySerial.begin(19200); // Or whatever baud rate your device uses
+  mySerial.begin(9600); 
 
   // Set the input pins as inputs - NO PULLUPS
   pinMode(statePin0, INPUT);
@@ -43,7 +40,7 @@ void setup() {
   pinMode(statePin2, INPUT);
   pinMode(ejectPin, INPUT); 
 
-  mySerial.println("DVD Tray State Monitor"); // Print to SoftwareSerial}
+  mySerial.println("DVD Tray State Monitor"); // Print to SoftwareSerial
 }
 
 void loop() {
@@ -83,6 +80,6 @@ void loop() {
   // Update the previous control state
   previousEjectState = currentEjectState;
 
-  delay(10); // Small delay for stability (optional)
+  // delay(10); // Small delay for stability (optional)
 }
 
