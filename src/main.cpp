@@ -1,3 +1,32 @@
+/*  Code by mathmaticalmaker
+    This is to read the DVD tray state lines from an Original Xbox and
+    write the states to a serial monitor when the status changes.  
+    The available documentation for these states is incomplete and incorrect
+    from what I've been able to find, to this is an attempt to document them
+    correctly.
+
+    This has been tested using an Arduino Leonardo clone and an FTDI adapter
+    connected to a PC running a terminal program.  Connections to the DVD header
+    on the Xbox were made by splicing into the wires of an original yellow DVD
+    cable, specifically pins 2-7.  
+    
+    Connections, DVD Header to Leonardo:
+    2 -- +5V    -- Vin
+    3 -- GND    -- GND
+    4 -- Eject  -- 4
+    5 -- State0 -- 5
+    6 -- State1 -- 6
+    7 -- State2 -- 7
+
+    Connections, Leonardo to FTDI
+    A0  -- TX
+    A1  -- RX
+    GND -- GND
+
+    Note the Leonardo is powered by the +5V from the Xbox itself and that 
+    common ground is used for the Leonardo and the FTDI adapter.  It is neither
+    necessary nor advisable to connect to VCC on the FTDI adapter.
+*/ 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
