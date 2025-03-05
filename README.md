@@ -35,7 +35,7 @@
 
 This project aims to accurately document the OG Xbox DVD drive's tray state signals, specifically to correct widespread inaccuracies regarding signal identification, implementation, and voltage levels. While the "100" solution for drive elimination is generally known, often referenced as TRAY_IN, CD_RDY, and TRAY_OUT (pins 7, 6, 5), many implementations rely on incorrect pinouts and voltage levels, leading to potential hardware damage. The correct signal names, as per the Xbox Motherboard Schematic, are TRAY_STATE2, TRAY_STATE1, and TRAY_STATE0.
 
-A key objective was to verify that the DVD drive's output signals, which serve as inputs to the SMC (System Management Controller), operate at 3.3V. This was expected due to the SMC's use of a Microchip PIC16C63, which has a V~DD~ of 3.3V, and the PIC's datasheet specifying input voltage levels within 0.3V of V~DD~.
+A key objective was to verify that the DVD drive's output signals, which serve as inputs to the SMC (System Management Controller), operate at 3.3V. This was expected due to the SMC's use of a Microchip PIC16C63, which has a V<sub>DD</sub> of 3.3V, and the PIC's datasheet specifying input voltage levels within 0.3V of V<sub>DD</sub>.
 
 ## Background and Motivation
 
@@ -55,7 +55,6 @@ Modified DVD Cable:
 
 
 Motherboard Connector Pinout:
-
 <img src="./images/Motherboard Connector Diagram - JH.png" alt="Connector Diagram" />
 
 
@@ -70,7 +69,8 @@ DVD Drive Connector:
 
 
 
-Test setup (cable close-up):<img src="./images/DVD Test Setup - Cable.jpg" style="zoom: 25%;" />
+Test setup (cable close-up):
+<img src="./images/DVD Test Setup - Cable.jpg" style="zoom: 25%;" />
 
 
 
@@ -91,7 +91,7 @@ Note that DVDEJECT is an input to the DVD drive from the SMC.  The tray state li
 
 #### SMC
 
-The most important thing to note here is that V~DD~ for the SMC is 3.3V!  This means the three inputs from the tray state lines of the DVD drive must be between 3.0V and 3.6V.  Voltages outside this range risk permanent damage to the SMC, and there a reports in various forums where people connected these lines directly to 5V and frying their motherboards.  The DVD_ACTIVE line has the same restrictions.  It isn't used in this analysis but it does come up later when looking at flawed schematics and products.
+The most important thing to note here is that V<sub>DD</sub> for the SMC is 3.3V!  This means the three inputs from the tray state lines of the DVD drive must be between 3.0V and 3.6V.  Voltages outside this range risk permanent damage to the SMC, and there a reports in various forums where people connected these lines directly to 5V and frying their motherboards.  The DVD_ACTIVE line has the same restrictions.  It isn't used in this analysis but it does come up later when looking at flawed schematics and products.
 
 The eject switch on the console isn't connected directly to the DVD drive.  It sends an input to the SMC, which in turn sends a signal to the DVD drive.  This is normally held high by a 1KΩ resistor and the SMC briefly pulls it low when the eject button is pressed.  This makes it a useful source for 3.3V signals.
 
@@ -171,7 +171,7 @@ No disrespect to WireOpposite, but this is the source of the incorrect schematic
 Problems with this circuit:
 
 - This creates a voltage divider sourced by the +12V pin (1), so with voltage going into pin 8 is +8V, i.e. $V_{out} = \frac{R_2}{R_1 + R_2} \cdot V_{in}$. Sourcing it from the +5V pin (2) produces the correct +3.3V.  
-- Pin 8 is the DVD_Active pin (labeled incorrectly above).  This is an input to the SMC which is running with a V~DD~ of 3.3V so +8V is far above the maximum ~3.6V specified by the datasheet.  I think my SMC was spared from damage because the theoretical maximum output from this voltage divider is 400µΩ.
+- Pin 8 is the DVD_Active pin (labeled incorrectly above).  This is an input to the SMC which is running with a V<sub>DD</sub> of 3.3V so +8V is far above the maximum ~3.6V specified by the datasheet.  I think my SMC was spared from damage because the theoretical maximum output from this voltage divider is 400µΩ.
 - Pin 4 is connected to ground.  This is an output from the SMC, so this is also puts the SMC in peril.  According to the schematic, this pin normally held high by a 1KΩ resistor so this may be what saved the SMC here.
   
 
