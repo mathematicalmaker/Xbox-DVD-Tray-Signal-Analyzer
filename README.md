@@ -87,7 +87,7 @@ Note the pin numbers for the 14-pin motherboard header correspond directly to th
 
 Note that DVDEJECT is an input to the DVD drive from the SMC.  The tray state lines are all outputs to the SMC from the DVD drive.  These are important things to consider regarding voltage and current.
 
-![](./images/Motherboard Schematic -DVD Header.png)
+<img src="./images/Motherboard Schematic -DVD Header.png" />
 
 #### SMC
 
@@ -95,7 +95,7 @@ The most important thing to note here is that V~DD~ for the SMC is 3.3V!  This m
 
 The eject switch on the console isn't connected directly to the DVD drive.  It sends an input to the SMC, which in turn sends a signal to the DVD drive.  This is normally held high by a 1KΩ resistor and the SMC briefly pulls it low when the eject button is pressed.  This makes it a useful source for 3.3V signals.
 
-![](./images/Motherboard Schematic - SMC.png)
+<img src="./images/Motherboard Schematic - SMC.png" />
 
 ## Software (Arduino Code)
 
@@ -124,6 +124,8 @@ Here is an updated stated diagram for a connected DVD drive.
 ## DVD Drive Elimination Circuit
 
 The desired tray state for DVD drive elimination is 100 on pins 7,6, and 5.  The correct input voltage for the SMC is 3.3V.  There are 3.3V sources available in a few locations on the motherboard, but in order to keep everything confined to the DVD header there are two options.  
+
+**Important Warning:** When designing or implementing a DVD drive elimination circuit, it is crucial to ensure that the output signals are at the correct voltage level (3.3V). *Applying higher voltages to the TRAY_STATE2, TRAY_STATE1, or TRAY_STATE0 pins can cause permanent damage to the Xbox's System Management Controller (SMC) or other motherboard components.* Always verify your circuit with a multimeter before connecting it to the Xbox.
 
 ### Option 1 - Voltage Divider
 
@@ -175,14 +177,14 @@ Problems with this circuit:
 
 ### Xenium DEM 3.0
 
-Here is the DEM I purchased.  It matched the bad schematic above.  I fixed it by desoldering the connector and soldering it to the other side of the board, taking care to ensure pin 2 was connected to +5V.  (Technically, there are four ways to insert the connector, so if you have one of these modules and decide to change it, take care to align it properly.)
+Here is the DEM I purchased.  The module needed to be repaired because it matched the bad schematic above, which had the 5V and 12V inputs, and the DVD_Active and Tray_State2 outputs swapped.  I fixed it by desoldering the connector and soldering it to the other side of the board, taking care to ensure pin 2 was connected to +5V.  (Technically, there are four ways to insert the connector, so if you have one of these modules and decide to change it, take care to align it properly.)
 
-![](./images/Xenium DEM Before and After.png)
+<img src="./images/Xenium DEM Before and After.png" />
 
 ### Bridging Pins 4 & 7
 
 This method shouldn't cause any damage and it technically works, but it is "noisy" since it leaves pins 5 & 6 open rather than connecting them to ground.  Here is a picture of that solution.
-![](./images/DVD-delete-cord.jpg)
+<img src="./images/DVD-delete-cord.jpg" />
 
 ### Cerbios Playbook v1.5 Option 1
 
@@ -204,7 +206,7 @@ This is another option which puts +5V onto pins 6&7, albeit with current-limitin
 ### The Ubiquitous Drawing
 
 This drawing for the motherboard connector and/or the names given to the pins are used all over the internet.  There is nothing inherently wrong with it since the pin positions are more important than the labels.  It is also likely the result of reverse-engineering and measuring the voltage on the pins individually to come up with the names, rather than looking at them together to define a 3-bit state.
-![](./images/dvd.jpg)
+<img src="./images/dvd.jpg" />
 
 The voltage and ground pins are correct, but from the schematic we now know the correct names:
 
@@ -223,26 +225,26 @@ The voltage and ground pins are correct, but from the schematic we now know the 
 ### DVD drive connected
 
 This test was performed on a 1.0 Xbox with a working Thompson DVD drive attached.
-![](./images/TestResults-DVD.png)
+<img src="./images/TestResults-DVD.png" />
 
 ### Repaired DEM Connected 
 
-This test was performed with a repaired DEM connected.  ![](./images/TestResults-DEM.png)
+This test was performed with a repaired DEM connected.  <img src="./images/TestResults-DEM.png" />
 
 ### "Easy DEM" Method
 
 This test was performed using the "Easy DEM" documented above.
-![](./images/TestResults-EasyDEM.png)
+<img src="./images/TestResults-EasyDEM.png" />
 
 ### Pins 4-7 only
 
 This test was performed with pin 4 connected to pin 7 and pins 5 and 6 "floating."  This works and shouldn't cause any damage, but it isn't a good solution as it sends a lot of random states to the SMC.  It settles to the proper state, but it is unknown how stable it is.  It is a minimal effort to just wired an Easy DEM instead.
-![](./images/TestResults-SS_Dave_Method.png)
+<img src="./images/TestResults-SS_Dave_Method.png" />
 
 ### Nothing Connected
 
 This are the test results with nothing connected.  It goes through some random states and settles to the "detecting" state, which some dashboards report as open. 
-![](./images/TestResults-NothingConnected.png)
+<img src="./images/TestResults-NothingConnected.png" />
 
-## 
+
 
