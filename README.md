@@ -1,12 +1,41 @@
 # OG Xbox DVD Drive State Analyzer and Elimination Circuit
 
-[TOC]
+## Table of contents
+
+- [OG Xbox DVD Drive State Analyzer and Elimination Circuit](#og-xbox-dvd-drive-state-analyzer-and-elimination-circuit)
+  - [Introduction](#introduction)
+  - [Background and Motivation](#background-and-motivation)
+  - [Hardware Setup](#hardware-setup)
+    - [Connection Details](#connection-details)
+    - [Signal Identification](#signal-identification)
+      - [DVD Header](#dvd-header)
+      - [SMC](#smc)
+  - [Software (Arduino Code)](#software-arduino-code)
+  - [State Diagram and Analysis](#state-diagram-and-analysis)
+  - [DVD Drive Elimination Circuit](#dvd-drive-elimination-circuit)
+    - [Option 1 - Voltage Divider](#option-1---voltage-divider)
+    - [Option 2 - Pin 4](#option-2---pin-4)
+    - [Easy DEM](#easy-dem)
+  - [Non-Working Designs and Outdated Info](#non-working-designs-and-outdated-info)
+    - [Bad Schematic](#bad-schematic)
+    - [Xenium DEM 3.0](#xenium-dem-30)
+    - [Bridging Pins 4 & 7](#bridging-pins-4--7)
+    - [Cerbios Playbook v1.5 Option 1](#cerbios-playbook-v15-option-1)
+    - [Cerbios Playbook v1.5 Option 2](#cerbios-playbook-v15-option-2)
+    - [Cerbios Playbook v1.5 Option 3](#cerbios-playbook-v15-option-3)
+    - [The Ubiquitous Drawing](#the-ubiquitous-drawing)
+  - [Appendix: Test Results](#appendix-test-results)
+    - [DVD drive connected](#dvd-drive-connected)
+    - [Repaired DEM Connected](#repaired-dem-connected)
+    - ["Easy DEM" Method](#easy-dem-method)
+    - [Pins 4-7 only](#pins-4-7-only)
+    - [Nothing Connected](#nothing-connected)
 
 ## Introduction
 
 This project aims to accurately document the OG Xbox DVD drive's tray state signals, specifically to correct widespread inaccuracies regarding signal identification, implementation, and voltage levels. While the "100" solution for drive elimination is generally known, often referenced as TRAY_IN, CD_RDY, and TRAY_OUT (pins 7, 6, 5), many implementations rely on incorrect pinouts and voltage levels, leading to potential hardware damage. The correct signal names, as per the Xbox Motherboard Schematic, are TRAY_STATE2, TRAY_STATE1, and TRAY_STATE0.
 
-A key objective was to verify that the DVD drive's output signals, which serve as inputs to the SMC (System Management Controller), operate at 3.3V. This was expected due to the SMC's use of a Microchip PIC16C63, which has a Vdd of 3.3V, and the PIC's datasheet specifying input voltage levels within 0.3V of Vdd.
+A key objective was to verify that the DVD drive's output signals, which serve as inputs to the SMC (System Management Controller), operate at 3.3V. This was expected due to the SMC's use of a Microchip PIC16C63, which has a V~DD~ of 3.3V, and the PIC's datasheet specifying input voltage levels within 0.3V of V~DD~.
 
 ## Background and Motivation
 
@@ -62,7 +91,7 @@ Note that DVDEJECT is an input to the DVD drive from the SMC.  The tray state li
 
 #### SMC
 
-The most important thing to note here is that VCC for the SMC is 3.3V!  This means the three inputs from the tray state lines of the DVD drive must be between 3.0V and 3.6V.  Voltages outside this range risk permanent damage to the SMC, and there a reports in various forums where people connected these lines directly to 5V and frying their motherboards.  The DVD_ACTIVE line has the same restrictions.  It isn't used in this analysis but it does come up later when looking at flawed schematics and products.
+The most important thing to note here is that V~DD~ for the SMC is 3.3V!  This means the three inputs from the tray state lines of the DVD drive must be between 3.0V and 3.6V.  Voltages outside this range risk permanent damage to the SMC, and there a reports in various forums where people connected these lines directly to 5V and frying their motherboards.  The DVD_ACTIVE line has the same restrictions.  It isn't used in this analysis but it does come up later when looking at flawed schematics and products.
 
 The eject switch on the console isn't connected directly to the DVD drive.  It sends an input to the SMC, which in turn sends a signal to the DVD drive.  This is normally held high by a 1KΩ resistor and the SMC briefly pulls it low when the eject button is pressed.  This makes it a useful source for 3.3V signals.
 
@@ -110,7 +139,6 @@ Since it is only being used for signaling and not driving a load, it is also saf
 ### Easy DEM
 
 An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimination module).  It only requires an original DVD power cable, a tiny flat-head screwdriver or similar tool, and a little patience.
-<img src="./images/Easy DEM - Numbered.png" style="zoom: 25%;" />
 
 1. Remove all of the pins from the 14-pin (motherboard end) connector **except** pins 4, 5, and 6.  Refer to the photo above -- odd pins are in the top row and even pins are on the bottom.  To do this, carefully pry the little plastic tab with your screwdriver and pull out the pin by pulling on the wire.
    <img src="./images/connector_tabs.jpg" style="zoom:25%;" />
@@ -123,6 +151,7 @@ An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimi
    Pin 4 --- Pin 7
    Pin 5 -- Pin 11
    Pin 6 -- Pin 12
+   <img src="./images/Easy DEM - Numbered.png" style="zoom: 25%;" />
 
 ## Non-Working Designs and Outdated Info
 
