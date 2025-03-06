@@ -2,7 +2,6 @@
 
 ## Table of contents
 
-- [OG Xbox DVD Drive State Analyzer and Elimination Circuit](#og-xbox-dvd-drive-state-analyzer-and-elimination-circuit)
   - [Introduction](#introduction)
   - [Background and Motivation](#background-and-motivation)
   - [Hardware Setup](#hardware-setup)
@@ -13,8 +12,8 @@
   - [Software (Arduino Code)](#software-arduino-code)
   - [State Diagram and Analysis](#state-diagram-and-analysis)
   - [DVD Drive Elimination Circuit](#dvd-drive-elimination-circuit)
-    - [Option 1 - Voltage Divider](#option-1---voltage-divider)
-    - [Option 2 - Pin 4](#option-2---pin-4)
+    - [Option 1: 3.3V from Voltage Divider](#option-1-33v-from-voltage-divider)
+    - [Option 2: 3.3V from Pin 4](#option-2-33v-from-pin-4)
     - [Easy DEM](#easy-dem)
   - [Non-Working Designs and Outdated Info](#non-working-designs-and-outdated-info)
     - [Bad Schematic](#bad-schematic)
@@ -40,7 +39,8 @@ A key objective was to verify that the DVD drive's output signals, which serve a
 
 ## Background and Motivation
 
-I discovered that the state diagram in the document "Xbox Hardware Design Specification 1.02" is incomplete and inaccurate. Utilizing a custom cable and an Arduino-based analyzer, I've developed an accurate state table and diagram. My motivation was to provide a definitive resource for understanding these signals, as existing methods often yielded correct results for incorrect reasons.
+I discovered that the state diagram in the document "Xbox Hardware Design Specification 1.02"[^2] is incomplete and inaccurate. Utilizing a custom cable and an Arduino-based analyzer, I've developed an accurate state table and diagram. My motivation was to provide a definitive resource for understanding these signals, as existing methods often yielded correct results for incorrect reasons.
+[^2]: https://consolemods.org/wiki/Xbox:Schematics#Hardware_Design_Specification
 
 Initially, I observed inconsistencies with drive detection in UnleashX and XBMC4Gamers, despite using Cerbios with both the legacy and modern "no DVD" modes.  A purchased "drive elimination module," intended to resolve these issues, also failed to function, matching a flawed online schematic. Further research revealed numerous unreliable solutions, some of which could cause hardware damage.
 
@@ -121,13 +121,13 @@ The desired tray state for DVD drive elimination is 100 on pins 7,6, and 5.  The
 
 **Important Warning:** When designing or implementing a DVD drive elimination circuit, it is crucial to ensure that the output signals are at the correct voltage level (3.3V). *Applying higher voltages to the TRAY_STATE2, TRAY_STATE1, or TRAY_STATE0 pins can cause permanent damage to the Xbox's System Management Controller (SMC) or other motherboard components.* Always verify your circuit with a multimeter before connecting it to the Xbox.
 
-### Option 1 - Voltage Divider
+### Option 1: 3.3V from Voltage Divider
 
 Use the 5V from pin 2 as the source for a voltage divider which outputs 3.3V.  
 
 <img src="./images/Corrected DEM.png" width="800" />
 
-### Option 2 - Pin 4
+### Option 2: 3.3V from Pin 4
 
 Since it is only being used for signaling and not driving a load, it is also safe to use pin 4, which receives 3.3V from the SMC.
 <img src="./images/Corrected DEM No Resistors.png" width="800" />
@@ -159,7 +159,7 @@ An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimi
 
 ### Bad Schematic
 
-As mentioned previously, this all started when I received a module I purchased as part of a DVD elimination kit.  I plugged it into my DVD cable but it didn't work -- both XBMC4Gamers and UnleashX reported the DVD drive as open, regardless of which "No DVD" mode I used for Cerbios, legacy or modern.  I reverse engineered the module to see it there was a bad connection and found it matched a schematic I found online.  The problem is the schematic is wrong.  
+As mentioned previously, this all started when I received a module I purchased as part of a DVD elimination kit.  I plugged it into my DVD cable but it didn't work -- both XBMC4Gamers and UnleashX reported the DVD drive as open, regardless of which "No DVD" mode I used for Cerbios, legacy or modern.  I reverse engineered the module to see it there was a bad connection and found it matched a schematic I found online.  The problem is that schematic is wrong.  
 
 No disrespect to WireOpposite, but this is the source of the incorrect schematic.  Details are in the issue I logged [here](https://github.com/wiredopposite/XND/issues/1).  Interestingly, the module I received had the exact same issue and the exact same fix -- to solder the connector from the opposite side of the board to effectively swap pin 1 (+12V) and 2 (+5V) and swap pins 7 (TrayState2) and 8 (DVD_Active).  Flipping the connector actually swaps all of the even and odd pins but since 5 and 6 are both grounded it doesn't change anything.  Here is the schematic:
 <img src="./images/Bad DEM Schematic.jpg" width="640" />
@@ -168,7 +168,7 @@ Problems with this circuit:
 
 - This creates a voltage divider sourced by the +12V pin (1), so with voltage going into pin 8 is +8V, i.e. $V_{out} = \frac{R_2}{R_1 + R_2} \cdot V_{in}$. Sourcing it from the +5V pin (2) produces the correct +3.3V.  
 - Pin 8 is the DVD_Active pin (labeled incorrectly above).  This is an input to the SMC which is running with a V<sub>DD</sub> of 3.3V so +8V is far above the maximum ~3.6V specified by the datasheet.  I think my SMC was spared from damage because the theoretical maximum output from this voltage divider is 400µΩ.
-- Pin 4 is connected to ground.  This is an output from the SMC, so this is also puts the SMC in peril.  According to the schematic, this pin normally held high by a 1KΩ resistor so this may be what saved the SMC here.
+- Pin 4 is connected to ground.  This is an output from the SMC, so this is also puts the SMC in peril.  According to the schematic[^1], this pin normally held high by a 1KΩ resistor so this may be what saved the SMC here.
 
 ### Xenium DEM 3.0
 
@@ -196,6 +196,7 @@ This directly connects +5V to pins 6&7.  It has been reported to cause damage.  
 ### Cerbios Playbook v1.5 Option 3
 
 This is another option which puts +5V onto pins 6&7, albeit with current-limiting resistors.  The resistors provide some protection against immediate damage to the SMC but the voltage is again incorrect.  It also sets the state to "media detected" as in the previous method.
+
 <img src="./images/cerbios_playbook_3.png" width="320" />
 
 ### The Ubiquitous Drawing
@@ -203,7 +204,7 @@ This is another option which puts +5V onto pins 6&7, albeit with current-limitin
 This drawing for the motherboard connector and/or the names given to the pins are used all over the internet.  There is nothing inherently wrong with it since the pin positions are more important than the labels.  It is also likely the result of reverse-engineering and measuring the voltage on the pins individually to come up with the names, rather than looking at them together to define a 3-bit state.
 <img src="./images/dvd.jpg" width="320" />
 
-The voltage and ground pins are correct, but from the schematic we now know the correct names:
+The voltage and ground pins are correct, but from the schematic[^1] we now know the correct names:
 
 | Pin | Direction                     | Name        | Notes                                                                                       |
 |:---:| ----------------------------- |:----------- | ------------------------------------------------------------------------------------------- |
