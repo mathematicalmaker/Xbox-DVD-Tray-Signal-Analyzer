@@ -50,34 +50,23 @@ In order to simplify connections to the microcontroller and to check voltages wh
 ### Connection Details
 
 Modified DVD Cable:
-<img src="./images/DVD Test Cable.jpg" alt="Alt Text" style="zoom: 25%;" />
 
-
+<img title="DVD Test Cable" src="./images/DVD Test Cable.jpg" alt="Alt Text"  width="640">
 
 Motherboard Connector Pinout:
 <img src="./images/Motherboard Connector Diagram - JH.png" alt="Connector Diagram" />
 
-
-
 Motherboard Connector:
-<img src="./images/Motherboard Connector - Numbered.png" style="zoom:67%;" />
-
-
+<img src="./images/Motherboard Connector - Numbered.png" width="320" />
 
 DVD Drive Connector:
 <img src="./images/DVD Connector - Numbered.png" style="zoom: 45%;" />
 
-
-
 Test setup (cable close-up):
 <img src="./images/DVD Test Setup - Cable.jpg" style="zoom: 25%;" />
 
-
-
 Test Setup:
 <img src="./images/DVD Test Setup.jpg" style="zoom:25%;" />
-
-
 
 ### Signal Identification
 
@@ -105,21 +94,20 @@ The code is in the /src folder.  I used an Arduino Leonardo clone for testing an
 
 ## State Diagram and Analysis
 
-Here is an updated stated diagram for a connected DVD drive.
+Here is an updated stated diagram for a connected DVD drive.  This was derived directly by connecting a Thompson DVD drive and monitoring the signals while performing various functions.
 
 <img src="images/New%20State%20Diagram.bmp" style="zoom:25%;" />
 
 | State | Description       |
-|-------|-------------------|
-|  000  | Detecting media   |
-|  001  | Tray open         |
-|  010  | Unloading         |
-|  011  | Opening           |
-|  100  | No media detected |
-|  101  | Closing           |
-|  110  | Media detected    |
-|  111  | Initializing      |
-
+| ----- | ----------------- |
+| 000   | Detecting media   |
+| 001   | Tray open         |
+| 010   | Unloading         |
+| 011   | Opening           |
+| 100   | No media detected |
+| 101   | Closing           |
+| 110   | Media detected    |
+| 111   | Initializing      |
 
 ## DVD Drive Elimination Circuit
 
@@ -143,22 +131,24 @@ Since it is only being used for signaling and not driving a load, it is also saf
 An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimination module).  It only requires an original DVD power cable, a tiny flat-head screwdriver or similar tool, and a little patience.
 
 1. Remove all of the pins from the 14-pin (motherboard end) connector **except** pins 4, 5, and 6.  Refer to the photo above -- odd pins are in the top row and even pins are on the bottom.  To do this, carefully pry the little plastic tab with your screwdriver and pull out the pin by pulling on the wire.
+   
    <img src="./images/connector_tabs.jpg" style="zoom:25%;" />
 
 2. Remove pins 4,5, and 6 from the 12-pin (DVD drive end) connector.
-
+   
    <img src="./images/connect_pin_tab.png" style="zoom:25%;" />
 
 3. Insert the other end of the wires from positions 4-6 as follows.  Be sure the tiny metal protrusion is facing the locking tab.
    Pin 4 --- Pin 7
    Pin 5 -- Pin 11
    Pin 6 -- Pin 12
+   
    <img src="./images/Easy DEM - Numbered.png" style="zoom: 25%;" />
 
 ## Non-Working Designs and Outdated Info
 
 > [!NOTE]
->
+> 
 > All of my testing was done using Cerbios 2.4.2.  When I contacted the seller of the bad module, they said they had not seen any issues in their own testing or heard from other customers.  They tested the module using Stellar and Evox (TSOP) with mixed results, so it is possible different BIOSes interact with the SMC differently.  Nonetheless, because of my direct analysis of the signals and voltages I am confident that my conclusions for a proper drive elimination circuit are correct.
 
 ### Bad Schematic
@@ -173,7 +163,6 @@ Problems with this circuit:
 - This creates a voltage divider sourced by the +12V pin (1), so with voltage going into pin 8 is +8V, i.e. $V_{out} = \frac{R_2}{R_1 + R_2} \cdot V_{in}$. Sourcing it from the +5V pin (2) produces the correct +3.3V.  
 - Pin 8 is the DVD_Active pin (labeled incorrectly above).  This is an input to the SMC which is running with a V<sub>DD</sub> of 3.3V so +8V is far above the maximum ~3.6V specified by the datasheet.  I think my SMC was spared from damage because the theoretical maximum output from this voltage divider is 400µΩ.
 - Pin 4 is connected to ground.  This is an output from the SMC, so this is also puts the SMC in peril.  According to the schematic, this pin normally held high by a 1KΩ resistor so this may be what saved the SMC here.
-  
 
 ### Xenium DEM 3.0
 
@@ -210,15 +199,13 @@ This drawing for the motherboard connector and/or the names given to the pins ar
 
 The voltage and ground pins are correct, but from the schematic we now know the correct names:
 
-| Pin  | Direction                     | Name        | Notes                                                        |
-| :--: | ----------------------------- | :---------- | ------------------------------------------------------------ |
-|  4   | Output from SMC; Input to DVD | DVDEJECT    | Held high to 3.3V via 1kΩ resistor.  SMC pulls it low briefly when eject button is pressed. |
-|  5   | Output from DVD; Input to SMC | TRAY_STATE0 | LSB for tray state (2^0^)                                    |
-|  6   | Output from DVD; Input to SMC | TRAY_STATE1 | Middle bit for tray state (2^1^)                             |
-|  7   | Output from DVD; Input to SMC | TRAY_STATE2 | MSB for tray state (2^2^)                                    |
-|  8   | Output from DVD; Input to SMC | DVD_ACTIVE  | Probably used to indicate reading/writing.  Not used in 1.6 motherboards. |
-
-
+| Pin | Direction                     | Name        | Notes                                                                                       |
+|:---:| ----------------------------- |:----------- | ------------------------------------------------------------------------------------------- |
+| 4   | Output from SMC; Input to DVD | DVDEJECT    | Held high to 3.3V via 1kΩ resistor.  SMC pulls it low briefly when eject button is pressed. |
+| 5   | Output from DVD; Input to SMC | TRAY_STATE0 | LSB for tray state (2^0^)                                                                   |
+| 6   | Output from DVD; Input to SMC | TRAY_STATE1 | Middle bit for tray state (2^1^)                                                            |
+| 7   | Output from DVD; Input to SMC | TRAY_STATE2 | MSB for tray state (2^2^)                                                                   |
+| 8   | Output from DVD; Input to SMC | DVD_ACTIVE  | Probably used to indicate reading/writing.  Not used in 1.6 motherboards.                   |
 
 ## Appendix: Test Results
 
@@ -227,7 +214,7 @@ The voltage and ground pins are correct, but from the schematic we now know the 
 This test was performed on a 1.0 Xbox with a working Thompson DVD drive attached.
 <img src="./images/TestResults-DVD.png" />
 
-### Repaired DEM Connected 
+### Repaired DEM Connected
 
 This test was performed with a repaired DEM connected.  <img src="./images/TestResults-DEM.png" />
 
@@ -245,6 +232,3 @@ This test was performed with pin 4 connected to pin 7 and pins 5 and 6 "floating
 
 This are the test results with nothing connected.  It goes through some random states and settles to the "detecting" state, which some dashboards report as open. 
 <img src="./images/TestResults-NothingConnected.png" />
-
-
-
