@@ -137,18 +137,21 @@ Since it is only being used for signaling and not driving a load, it is also saf
 An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimination module).  It only requires an original DVD power cable, a tiny flat-head screwdriver or similar tool, and a little patience.
 
 1. Remove all of the pins from the 14-pin (motherboard end) connector **except** pins 4, 5, and 6.  Refer to the photo above -- odd pins are in the top row and even pins are on the bottom.  To do this, carefully pry the little plastic tab with your screwdriver and pull out the pin by pulling on the wire.
-   
+
    <img src="./images/connector_tabs.jpg" width="640" />
 
 2. Remove pins 4,5, and 6 from the 12-pin (DVD drive end) connector.
-   
+
    <img src="./images/connect_pin_tab.png" width="640" />
 
-3. Insert the other end of the wires from positions 4-6 as follows.  Be sure the tiny metal protrusion is facing the locking tab.
-   Pin 4 --- Pin 7
-   Pin 5 -- Pin 11
-   Pin 6 -- Pin 12
-   
+3. Insert the other end of the wires from positions 4-6 as follows.  Be sure the tiny metal protrusion is facing the locking tab.  
+
+   ```
+   Pin 4 <---> Pin 7
+   Pin 5 <---> Pin 11
+   Pin 6 <---> Pin 12
+   ```
+
    <img src="./images/Easy DEM - Numbered.png" width="800" />
 
 ## Non-Working Designs and Outdated Info
