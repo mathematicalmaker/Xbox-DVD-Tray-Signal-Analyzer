@@ -119,7 +119,10 @@ Here is an updated stated diagram for a connected DVD drive.  This was derived d
 
 The desired tray state for DVD drive elimination is 100 on pins 7,6, and 5.  The correct input voltage for the SMC is 3.3V.  There are 3.3V sources available in a few locations on the motherboard, but in order to keep everything confined to the DVD header there are two options.  
 
-**Important Warning:** When designing or implementing a DVD drive elimination circuit, it is crucial to ensure that the output signals are at the correct voltage level (3.3V). *Applying higher voltages to the TRAY_STATE2, TRAY_STATE1, or TRAY_STATE0 pins can cause permanent damage to the Xbox's System Management Controller (SMC) or other motherboard components.* Always verify your circuit with a multimeter before connecting it to the Xbox.
+> [!CAUTION]
+>
+> When designing or implementing a DVD drive elimination circuit, it is crucial to ensure that the output signals are at the correct voltage level (3.3V). *Applying higher voltages to the TRAY_STATE2, TRAY_STATE1, or TRAY_STATE0 pins can cause permanent damage to the Xbox's System Management Controller (SMC) or other motherboard components.* Always verify your circuit with a multimeter before connecting it to the Xbox.
+>
 
 ### Option 1: 3.3V from Voltage Divider
 
