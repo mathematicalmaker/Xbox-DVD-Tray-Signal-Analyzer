@@ -33,7 +33,8 @@
 
 ## Introduction
 
-This project aims to accurately document the OG Xbox DVD drive's tray state signals, specifically to correct widespread inaccuracies regarding signal identification, implementation, and voltage levels. While the "100" solution for drive elimination is generally known, often referenced as TRAY_IN, CD_RDY, and TRAY_OUT (pins 7, 6, 5), many implementations rely on incorrect pinouts and voltage levels, leading to potential hardware damage. The correct signal names, as per the Xbox Motherboard Schematic, are TRAY_STATE2, TRAY_STATE1, and TRAY_STATE0.
+This project aims to accurately document the OG Xbox DVD drive's tray state signals, specifically to correct widespread inaccuracies regarding signal identification, implementation, and voltage levels. While the "100" solution for drive elimination is generally known, often referenced as TRAY_IN, CD_RDY, and TRAY_OUT (pins 7, 6, 5), many implementations rely on incorrect pinouts and voltage levels, leading to potential hardware damage. The correct signal names, as per the Xbox Motherboard Schematic[^1], are TRAY_STATE2, TRAY_STATE1, and TRAY_STATE0.
+[^1]: https://consolemods.org/wiki/Xbox:Schematics
 
 A key objective was to verify that the DVD drive's output signals, which serve as inputs to the SMC (System Management Controller), operate at 3.3V. This was expected due to the SMC's use of a Microchip PIC16C63, which has a V<sub>DD</sub> of 3.3V, and the PIC's datasheet specifying input voltage levels within 0.3V of V<sub>DD</sub>.
 
@@ -51,11 +52,11 @@ In order to simplify connections to the microcontroller and to check voltages wh
 
 Modified DVD Cable:
 
-<img align="left" title="DVD Test Cable" src="./images/DVD Test Cable.jpg" alt="Alt Text"  width="640">
+<img src="./images/DVD Test Cable.jpg" title="DVD Test Cable" alt="DVD Test Cable"  width="640" />
 
 Motherboard Connector Pinout:
 
-<img src="./images/Motherboard Connector Diagram - JH.png" alt="Connector Diagram" />
+<img src="./images/Motherboard Connector Diagram - JH.png" title="Motherboard Connector" alt="Motherboard Connector Diagram"  />
 
 Motherboard Connector:
 
@@ -75,7 +76,7 @@ Test Setup:
 
 ### Signal Identification
 
-Note the pin numbers for the 14-pin motherboard header correspond directly to the 12-pin DVD drive connector.  I.e., pin 1 is connected to pin 1, etc.  This may seem obvious but there are a lot of diagrams which use differing numbering schemes.  For this document, all pin numbers on schematics and physical connecters are consistent.
+Note the pin numbers for the 14-pin motherboard header correspond directly to the 12-pin DVD drive connector.  I.e., pin 1 is connected to pin 1, etc.  This may seem obvious but there are a lot of diagrams in the wild which use differing numbering schemes.  For this document, all pin numbers on schematics and physical connecters are consistent.
 
 #### DVD Header
 
@@ -89,7 +90,7 @@ The most important thing to note here is that V<sub>DD</sub> for the SMC is 3.3V
 
 The eject switch on the console isn't connected directly to the DVD drive.  It sends an input to the SMC, which in turn sends a signal to the DVD drive.  This is normally held high by a 1KΩ resistor and the SMC briefly pulls it low when the eject button is pressed.  This makes it a useful source for 3.3V signals.
 
-<img src="./images/Motherboard Schematic - SMC.png" />
+<img src="./images/Motherboard Schematic - SMC.png" width="800" />
 
 ## Software (Arduino Code)
 
@@ -101,7 +102,7 @@ The code is in the /src folder.  I used an Arduino Leonardo clone for testing an
 
 Here is an updated stated diagram for a connected DVD drive.  This was derived directly by connecting a Thompson DVD drive and monitoring the signals while performing various functions.
 
-<img src="images/New%20State%20Diagram.bmp" style="zoom:25%;" />
+<img src="images/New%20State%20Diagram.bmp" width="800" />
 
 | State | Description       |
 | ----- | ----------------- |
@@ -124,12 +125,12 @@ The desired tray state for DVD drive elimination is 100 on pins 7,6, and 5.  The
 
 Use the 5V from pin 2 as the source for a voltage divider which outputs 3.3V.  
 
-<img src="./images/Corrected DEM.png" style="zoom: 25%;" />
+<img src="./images/Corrected DEM.png" width="800" />
 
 ### Option 2 - Pin 4
 
 Since it is only being used for signaling and not driving a load, it is also safe to use pin 4, which receives 3.3V from the SMC.
-<img src="./images/Corrected DEM No Resistors.png" style="zoom:25%;" />
+<img src="./images/Corrected DEM No Resistors.png" width="800" />
 
 ### Easy DEM
 
@@ -137,18 +138,18 @@ An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimi
 
 1. Remove all of the pins from the 14-pin (motherboard end) connector **except** pins 4, 5, and 6.  Refer to the photo above -- odd pins are in the top row and even pins are on the bottom.  To do this, carefully pry the little plastic tab with your screwdriver and pull out the pin by pulling on the wire.
    
-   <img src="./images/connector_tabs.jpg" style="zoom:25%;" />
+   <img src="./images/connector_tabs.jpg" width="640" />
 
 2. Remove pins 4,5, and 6 from the 12-pin (DVD drive end) connector.
    
-   <img src="./images/connect_pin_tab.png" style="zoom:25%;" />
+   <img src="./images/connect_pin_tab.png" width="640" />
 
 3. Insert the other end of the wires from positions 4-6 as follows.  Be sure the tiny metal protrusion is facing the locking tab.
    Pin 4 --- Pin 7
    Pin 5 -- Pin 11
    Pin 6 -- Pin 12
    
-   <img src="./images/Easy DEM - Numbered.png" style="zoom: 25%;" />
+   <img src="./images/Easy DEM - Numbered.png" width="800" />
 
 ## Non-Working Designs and Outdated Info
 
@@ -161,7 +162,7 @@ An easy way to implement option 2 is what I'm calling an "Easy DEM" (drive elimi
 As mentioned previously, this all started when I received a module I purchased as part of a DVD elimination kit.  I plugged it into my DVD cable but it didn't work -- both XBMC4Gamers and UnleashX reported the DVD drive as open, regardless of which "No DVD" mode I used for Cerbios, legacy or modern.  I reverse engineered the module to see it there was a bad connection and found it matched a schematic I found online.  The problem is the schematic is wrong.  
 
 No disrespect to WireOpposite, but this is the source of the incorrect schematic.  Details are in the issue I logged [here](https://github.com/wiredopposite/XND/issues/1).  Interestingly, the module I received had the exact same issue and the exact same fix -- to solder the connector from the opposite side of the board to effectively swap pin 1 (+12V) and 2 (+5V) and swap pins 7 (TrayState2) and 8 (DVD_Active).  Flipping the connector actually swaps all of the even and odd pins but since 5 and 6 are both grounded it doesn't change anything.  Here is the schematic:
-<img src="./images/Bad DEM Schematic.jpg" style="zoom:80%;" />
+<img src="./images/Bad DEM Schematic.jpg" width="640" />
 
 Problems with this circuit:
 
@@ -173,34 +174,34 @@ Problems with this circuit:
 
 Here is the DEM I purchased.  The module needed to be repaired because it matched the bad schematic above, which had the 5V and 12V inputs, and the DVD_Active and Tray_State2 outputs swapped.  I fixed it by desoldering the connector and soldering it to the other side of the board, taking care to ensure pin 2 was connected to +5V.  (Technically, there are four ways to insert the connector, so if you have one of these modules and decide to change it, take care to align it properly.)
 
-<img src="./images/Xenium DEM Before and After.png" />
+<img src="./images/Xenium DEM Before and After.png" width="800" />
 
 ### Bridging Pins 4 & 7
 
 This method shouldn't cause any damage and it technically works, but it is "noisy" since it leaves pins 5 & 6 open rather than connecting them to ground.  Here is a picture of that solution.
-<img src="./images/DVD-delete-cord.jpg" />
+<img src="./images/DVD-delete-cord.jpg" width="320" />
 
 ### Cerbios Playbook v1.5 Option 1
 
 This is from the underside of the motherboard.  It does generate the closed-empty (100) state but the voltages are wrong.  It might not cause immediate damage to the SMC because of the current-limiting resistors, but it causes undue stress on the PIC chip.
 
-<img src="./images/cerbios_playbook_1.png" style="zoom:50%;" />
+<img src="./images/cerbios_playbook_1.png" width="320" />
 
 ### Cerbios Playbook v1.5 Option 2
 
 This directly connects +5V to pins 6&7.  It has been reported to cause damage.  Again, these are inputs for the SMC so they should be 3.3V.  Furthermore, if it worked this would report the media detected (110) state to the SMC.  Reporting that state with the correct voltage might have valid applications, such as connecting some type of IDE drive in place of an Xbox DVD drive, but that is outdated.
 
-<img src="./images/cerbios_playbook_2.png" style="zoom:50%;" />
+<img src="./images/cerbios_playbook_2.png" width="320" />
 
 ### Cerbios Playbook v1.5 Option 3
 
 This is another option which puts +5V onto pins 6&7, albeit with current-limiting resistors.  The resistors provide some protection against immediate damage to the SMC but the voltage is again incorrect.  It also sets the state to "media detected" as in the previous method.
-<img src="./images/cerbios_playbook_3.png" style="zoom:50%;" />
+<img src="./images/cerbios_playbook_3.png" width="320" />
 
 ### The Ubiquitous Drawing
 
 This drawing for the motherboard connector and/or the names given to the pins are used all over the internet.  There is nothing inherently wrong with it since the pin positions are more important than the labels.  It is also likely the result of reverse-engineering and measuring the voltage on the pins individually to come up with the names, rather than looking at them together to define a 3-bit state.
-<img src="./images/dvd.jpg" />
+<img src="./images/dvd.jpg" width="320" />
 
 The voltage and ground pins are correct, but from the schematic we now know the correct names:
 
@@ -221,7 +222,8 @@ This test was performed on a 1.0 Xbox with a working Thompson DVD drive attached
 
 ### Repaired DEM Connected
 
-This test was performed with a repaired DEM connected.  <img src="./images/TestResults-DEM.png" />
+This test was performed with a repaired DEM connected. 
+<img src="./images/TestResults-DEM.png" />
 
 ### "Easy DEM" Method
 
