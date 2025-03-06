@@ -51,22 +51,27 @@ In order to simplify connections to the microcontroller and to check voltages wh
 
 Modified DVD Cable:
 
-<img title="DVD Test Cable" src="./images/DVD Test Cable.jpg" alt="Alt Text"  width="640">
+<img align="left" title="DVD Test Cable" src="./images/DVD Test Cable.jpg" alt="Alt Text"  width="640">
 
 Motherboard Connector Pinout:
+
 <img src="./images/Motherboard Connector Diagram - JH.png" alt="Connector Diagram" />
 
 Motherboard Connector:
+
 <img src="./images/Motherboard Connector - Numbered.png" width="320" />
 
 DVD Drive Connector:
-<img src="./images/DVD Connector - Numbered.png" style="zoom: 45%;" />
+
+<img src="./images/DVD Connector - Numbered.png" width="320" />
 
 Test setup (cable close-up):
-<img src="./images/DVD Test Setup - Cable.jpg" style="zoom: 25%;" />
+
+<img src="./images/DVD Test Setup - Cable.jpg" width="800" />
 
 Test Setup:
-<img src="./images/DVD Test Setup.jpg" style="zoom:25%;" />
+
+<img src="./images/DVD Test Setup.jpg" width="800" />
 
 ### Signal Identification
 
