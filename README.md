@@ -46,7 +46,7 @@ Initially, I observed inconsistencies with drive detection in UnleashX and XBMC4
 
 ## Hardware Setup
 
-In order to simplify connections to the microcontroller and to check voltages while the DVD drive or other circuits are connected, I modified the original DVD power cable.  I spliced wires with female 0.1" DuPont connectors into the wires for pins 2-6.  This gave me access to +5V, ground, the eject input from the SMC, and the three tray_state outputs to the SMC.
+In order to simplify connections to the microcontroller and to check voltages while the DVD drive or other circuits are connected, I modified the original DVD power cable.  I spliced wires with female DuPont connectors into the wires for pins 2-6.  This gave me access to +5V, ground, the eject input from the SMC, and the three tray_state outputs to the SMC.
 
 ### Connection Details
 
